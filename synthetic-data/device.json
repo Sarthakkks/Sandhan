@@ -1,0 +1,24 @@
+{
+  "imei": "490154203237518",
+  "imsi": "404101234567890",
+  "device_model": "Redmi Note 12",
+  "manufacturer": "Xiaomi",
+  "android_version": "13",
+  "first_seen": "2024-01-10T08:00:00",
+  "last_seen": "2024-01-15T10:05:00",
+  "sim_history": [
+    { "msisdn": "9820000002", "imsi": "404101234567890", "start": "2024-01-10T08:00:00", "end": "2024-01-15T10:03:00" },
+    { "msisdn": "9830000003", "imsi": "404101234567891", "start": "2024-01-15T10:03:01", "end": "2024-01-15T10:05:00" },
+    { "msisdn": "9840000004", "imsi": "404101234567892", "start": "2024-01-15T11:25:00", "end": null }
+  ],
+  "installed_apps": [
+    { "package": "com.phonepe.app", "installed": "2023-12-01", "last_used": "2024-01-15T10:04:55" },
+    { "package": "net.one97.paytm", "installed": "2023-11-15", "last_used": "2024-01-15T10:02:30" },
+    { "package": "com.google.android.apps.nbu.paisa.user", "installed": "2024-01-01", "last_used": "2024-01-15T10:01:55" },
+    { "package": "com.whatsapp", "installed": "2023-01-01", "last_used": "2024-01-15T09:58:00" }
+  ],
+  "network_logs": [
+    { "timestamp": "2024-01-15T10:02:05", "ip": "192.168.10.42", "action": "connect", "app": "com.phonepe.app" },
+    { "timestamp": "2024-01-15T10:03:50", "ip": "192.168.10.42", "action": "connect", "app": "net.one97.paytm" }
+  ]
+}

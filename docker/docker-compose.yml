@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  sandhan:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - sandhan_data:/app/data
+      - sandhan_uploads:/app/uploads
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - SANDHAN_JWT_SECRET=sandhan-secret-key-change-in-production
+      - SANDHAN_ENCRYPTION_KEY=your-32-byte-hex-key-here
+      - BHASHINI_API_KEY=${BHASHINI_API_KEY:-}
+      - BHASHINI_USER_ID=${BHASHINI_USER_ID:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  sandhan_data:
+  sandhan_uploads:
