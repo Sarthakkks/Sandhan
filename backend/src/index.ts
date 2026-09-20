@@ -46,9 +46,18 @@ async function start() {
       secret: process.env.JWT_SECRET || 'supersecret_sandhan_key_2024'
     });
 
-    // Frontend static serving
-    const frontendDist = path.join(process.cwd(), '..', 'frontend', 'dist');
-    if (fs.existsSync(frontendDist)) {
+    // Frontend static serving resolution across environments
+    const possibleDistPaths = [
+      path.join(process.cwd(), '..', 'frontend', 'dist'),
+      path.join(process.cwd(), 'frontend', 'dist'),
+      path.join(process.cwd(), 'public'),
+      path.join(__dirname, '..', 'public'),
+      path.join(__dirname, '..', 'frontend', 'dist'),
+    ];
+
+    const frontendDist = possibleDistPaths.find((p) => fs.existsSync(p)) || null;
+
+    if (frontendDist) {
       await fastify.register(staticPlugin, {
         root: frontendDist,
         prefix: '/'
@@ -74,15 +83,18 @@ async function start() {
     await fastify.register(briefRoutes, { prefix: '/api/brief' });
     await fastify.register(bhashiniRoutes, { prefix: '/api/bhashini' });
 
-    // Catch-all to serve frontend if running
+    // Catch-all to serve frontend SPA routes or API 404
     fastify.setNotFoundHandler((request, reply) => {
       if (request.url.startsWith('/api')) {
         reply.status(404).send({ error: 'Not found' });
       } else {
-        if (fs.existsSync(frontendDist)) {
+        if (frontendDist && fs.existsSync(path.join(frontendDist, 'index.html'))) {
           reply.sendFile('index.html');
         } else {
-          reply.status(404).send({ error: 'Frontend not built' });
+          reply.status(404).send({ 
+            error: 'Frontend build not found', 
+            hint: 'Please run npm run build in frontend directory or visit http://localhost:5173 during development.' 
+          });
         }
       }
     });
