@@ -73,6 +73,3 @@ Set `BHASHINI_API_KEY` and `BHASHINI_USER_ID` in `.env` to enable multi-lingual 
 ## API Reference
 - `POST /api/upload`: Upload data files
 - `GET /api/analysis`: Retrieve investigation results
-
-## License
-MIT
