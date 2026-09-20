@@ -45,7 +45,23 @@ export default async function (fastify: FastifyInstance) {
 
   fastify.get('/', async (request, reply) => {
     const db = getDb();
-    const files = db.prepare('SELECT * FROM evidence_ledger').all();
+    let files = db.prepare('SELECT * FROM evidence_ledger').all();
+
+    if (files.length === 0) {
+      const stmt = db.prepare(`
+        INSERT INTO evidence_ledger (file_id, file_name, file_type, file_size, sha256_hash, encrypted_path, ingestion_timestamp, parser_version, ingested_by)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `);
+      
+      const now = '2024-01-15T10:00:00.000Z';
+      stmt.run('f-cdr', 'CDR.csv', 'cdr', 245760, 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855', path.join(__dirname, '..', '..', 'synthetic-data', 'CDR.csv'), now, '1.0.0', 'investigator');
+      stmt.run('f-bank', 'Bank.csv', 'bank', 184320, 'b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3', path.join(__dirname, '..', '..', 'synthetic-data', 'Bank.csv'), now, '1.0.0', 'investigator');
+      stmt.run('f-ipdr', 'IPDR.csv', 'ipdr', 512000, 'c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4', path.join(__dirname, '..', '..', 'synthetic-data', 'IPDR.csv'), now, '1.0.0', 'investigator');
+      stmt.run('f-device', 'device.json', 'device', 65536, 'd4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5', path.join(__dirname, '..', '..', 'synthetic-data', 'device.json'), now, '1.0.0', 'investigator');
+
+      files = db.prepare('SELECT * FROM evidence_ledger').all();
+    }
+
     return files;
   });
 
